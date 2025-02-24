@@ -1,14 +1,17 @@
 from flask import Flask, Response, jsonify
 from flask_cors import CORS
 import cv2
+import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # تفعيل CORS للسماح بالاتصال بين الفرونت والباك
 
+# 📡 Route رئيسي للتأكد إن السيرفر شغال
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "Backend is working with real-time analysis!"})
 
+# 🎥 دالة لبث الفيديو مع تحليل الكائنات
 def generate_frames():
     cam = cv2.VideoCapture(0)
 
@@ -26,6 +29,7 @@ def generate_frames():
     while True:
         success, frame = cam.read()
         if not success:
+            print("Failed to grab frame")
             break
 
         # تحليل الفيديو واكتشاف الكائنات
@@ -48,10 +52,11 @@ def generate_frames():
 
     cam.release()
 
+# 🌐 Route لبث الفيديو
 @app.route('/video_feed')
 def video_feed():
-    return Response(generate_frames(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+# 🚀 تشغيل السيرفر
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
