@@ -4,12 +4,17 @@ import cv2
 import os
 
 app = Flask(__name__)
-CORS(app)  # تفعيل CORS للسماح بالاتصال بين الفرونت والباك
+CORS(app)  # السماح للفرونت آند بالاتصال
 
-# 📡 Route رئيسي للتأكد إن السيرفر شغال
-@app.route('/', methods=['GET'])
+# 📡 Route رئيسي للتأكد من أن السيرفر شغال
+@app.route('/')
 def home():
     return jsonify({"message": "Backend is working with real-time analysis!"})
+
+# 🖥️ Route API بسيط
+@app.route("/api")
+def api():
+    return jsonify({"message": "API is working!"})
 
 # 🎥 دالة لبث الفيديو مع تحليل الكائنات
 def generate_frames():
@@ -42,7 +47,7 @@ def generate_frames():
                 cv2.putText(frame, classNames[classId - 1], (box[0], box[1] - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
-        # تحويل الصورة لـ JPEG
+        # تحويل الصورة إلى JPEG
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
 
@@ -58,5 +63,5 @@ def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # 🚀 تشغيل السيرفر
-if __name__ == "__main__":
+if __name__ == "__main_-":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
