@@ -20,9 +20,19 @@ body {
 /* ✅ المحتوى الرئيسي */
 .main-content {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column; /* ترتيب كأعمدة */
+  align-items: center;
   padding: 2rem;
+  gap: 20px;
+  width: 90%;
+  margin: auto;
+}
+
+/* ✅ الحاوية التي تضم بيانات الخادم وتحليل البث */
+.top-section {
+  display: flex;
+  justify-content: space-between; /* توزيع العناصر أفقياً */
+  width: 100%;
   gap: 20px;
 }
 
@@ -32,10 +42,10 @@ body {
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 45%;
-  min-width: 320px;
+  flex: 1; /* يضمن أن كل قسم يأخذ نفس الحجم */
   text-align: center;
   transition: transform 0.3s ease;
+  min-width: 320px;
 }
 
 .data-section:hover, .stream-section:hover {
@@ -119,8 +129,12 @@ body {
     flex-direction: column;
     align-items: center;
   }
+
+  .top-section {
+    flex-direction: column; /* تحويل الترتيب إلى عمودي */
+  }
   
   .data-section, .stream-section {
-    width: 90%;
+    width: 100%;
   }
 }
