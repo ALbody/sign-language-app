@@ -1,66 +1,71 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import './App.css'; // ملف CSS خارجي
+import axios from "axios";
+import { useEffect, useState } from "react";
+import "./App.css"; // ملف CSS خارجي
 
 function App() {
   const [data, setData] = useState(null);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [streamUrl, setStreamUrl] = useState("");
 
+  // جلب بيانات السيرفر عند تحميل الصفحة
   useEffect(() => {
-    axios.get('http://127.0.0.1:5000/')
-      .then(response => setData(response.data))
-      .catch(error => console.error('Error:', error));
+    axios
+      .get("http://127.0.0.1:5000/")
+      .then((response) => setData(response.data))
+      .catch((error) => console.error("Error fetching server data:", error));
   }, []);
 
-  // دالة بدء البث
+  // 🎥 دالة بدء البث
   const startStreaming = () => {
     setIsStreaming(true);
+    setStreamUrl("http://127.0.0.1:5000/video_feed?${new Date().getTime()}"); // تحديث الرابط لمنع التخزين المؤقت
   };
 
-  // دالة إيقاف البث
+  // ⏹️ دالة إيقاف البث
   const stopStreaming = () => {
     setIsStreaming(false);
+    setStreamUrl(""); // إفراغ الرابط لإخفاء الفيديو
   };
 
   return (
     <div className="App">
-      {/* الهيدر */}
+      {/* ✅ الهيدر */}
       <header className="header">
         <h1>🎥 Object Recognition App</h1>
       </header>
 
-      {/* المحتوى الرئيسي */}
+      {/* ✅ المحتوى الرئيسي */}
       <main className="main-content">
         <section className="data-section">
-          <h2>📊 Server data</h2>
+          <h2>📊 Server Data</h2>
           {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : <p>جاري التحميل...</p>}
         </section>
 
         <section className="stream-section">
-          <h2>📡 Broadcast analysis</h2>
+          <h2>📡 Broadcast Analysis</h2>
 
           {isStreaming ? (
-            <img
-              src="http://127.0.0.1:5000/video_feed"
-              alt="Camera Stream"
-              className="video-feed"
-            />
+            <img src={streamUrl} alt="Camera Stream" className="video-feed" />
           ) : (
-            <div className="placeholder">Broadcast is down🚫</div>
+            <div className="placeholder">🚫 Broadcast is down</div>
           )}
 
-          {/* أزرار التحكم */}
+          {/* ✅ أزرار التحكم */}
           <div className="button-group">
             {!isStreaming ? (
-              <button className="start-btn" onClick={startStreaming}>▶️ Broadcast started</button>
+              <button className="start-btn" onClick={startStreaming}>
+                ▶️ Start Broadcast
+              </button>
             ) : (
-              <button className="stop-btn" onClick={stopStreaming}>⏹️stop broadcasting</button>
+              <button className="stop-btn" onClick={stopStreaming}>
+                ⏹️ Stop Broadcast
+              </button>
             )}
           </div>
         </section>
       </main>
 
-      {/* الفوتر */}
+      {/* ✅ الفوتر */}
       <footer className="footer">
         <p>© 2024 Object Recognition App | Made with Abdullah_Salah</p>
       </footer>
